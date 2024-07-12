@@ -7,7 +7,7 @@ function Processing() {
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prevProgress) => (prevProgress < 100 ? prevProgress + 10 : 100));
-    }, 1000);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -15,7 +15,7 @@ function Processing() {
   return (
     <div className="App">
       <header className="App-header">
-      <img src="akuras.png" alt="Akuras" className="logo" />
+      <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
         <h1>Processing...</h1>
         <div className="progress-circle">
           <svg>

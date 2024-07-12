@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bubble } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { ClusterContext } from '../context/cluster-context'; 
 import '../css/result.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ChartJS.register(
   CategoryScale,
@@ -14,96 +15,103 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const data = {
-  datasets: [
-    {
-      label: "Car",
-      data: [
-        { x: 10, y: 20, r: 15 },
-        { x: 15, y: 10, r: 10 },
-        { x: 25, y: 15, r: 20 },
-      ],
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-    },
-    {
-      label: "Motorcycles",
-      data: [
-        { x: 20, y: 30, r: 25 },
-        { x: 30, y: 20, r: 15 },
-        { x: 35, y: 25, r: 30 },
-      ],
-      backgroundColor: "rgba(153, 102, 255, 0.6)",
-    },
-  ],
-};
-
-const options = {
-  scales: {
-    x: {
-      type: "linear",
-      position: "bottom",
-    },
-  },
-};
 
 function Result() {
   const { clusters } = useContext(ClusterContext);
+  const [processedClusters, setProcessedClusters] = useState([]);
   const navigate = useNavigate();
+  const [data, setData] = useState({ datasets: [] });
+
+  useEffect(() => {
+    if (clusters) {
+      const keys = Object.keys(clusters.rice_brand);
+      const data = keys.map(key => ({
+        no: key,
+        rice_brand: clusters.rice_brand[key],
+        sosoh_degree: clusters.sosoh_degree[key],
+        water_content: clusters.water_content[key],
+        broken_item: clusters.broken_item[key],
+        cluster: clusters.cluster[key]
+      }));
+      setProcessedClusters(data);
+
+      const clusterGroups = data.reduce((acc, row) => {
+        acc[row.cluster] = acc[row.cluster] || [];
+        acc[row.cluster].push({
+          x: row.sosoh_degree,
+          y: row.water_content,
+          r: row.broken_item * 150, 
+          label: row.rice_brand
+        });
+        return acc;
+      }, {});
+
+      const datasets = Object.keys(clusterGroups).map(cluster => ({
+        label: `Cluster ${cluster}`,
+        data: clusterGroups[cluster],
+        backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`
+      }));
+
+      setData({ datasets });
+    }
+  }, [clusters]);
 
   const handleBack = () => {
     navigate("/");
   };
 
-  const renderTable = (clusterNumber) => (
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Column 1</th>
-          <th>Column 2</th>
-          <th>Column 3</th>
-        </tr>
-      </thead>
-      <tbody>
-        {[1, 2, 3, 4, 5].map((row) => (
-          <tr key={row}>
-            <td>{row}</td>
-            <td>{clusterNumber}</td>
-            <td>{clusterNumber}</td>
-            <td>{clusterNumber}</td>
+  if (!Array.isArray(processedClusters) || processedClusters.length === 0) {
+    return <div>Error: No cluster data available.</div>;
+  }
+
+  const renderTable = (data, clusterNumber) => (
+    <div key={clusterNumber}>
+      <h3>Cluster {clusterNumber}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Rice Brand</th>
+            <th>Sosoh Degree</th>
+            <th>Water Content</th>
+            <th>Broken Item</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((row, index) => (
+            <tr key={index}>
+              <td>{row.no}</td>
+              <td>{row.rice_brand}</td>
+              <td>{row.sosoh_degree}</td>
+              <td>{row.water_content}</td>
+              <td>{row.broken_item}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
+
+  const clusterGroups = processedClusters.reduce((acc, row) => {
+    acc[row.cluster] = acc[row.cluster] || [];
+    acc[row.cluster].push(row);
+    return acc;
+  }, {});
+
+  const clusterEntries = Object.entries(clusterGroups);
 
   return (
     <div className="result-container">
       <header>
-        <img src="akuras.png" alt="Akuras" className="logo" />
+        <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
         <h1>Result</h1>
-        <p>Cluster of Rice Quality K= {clusters}</p>
+        <p>Cluster of Rice Quality K= {clusterEntries.length}</p>
       </header>
       <div className="chart-section">
-        <Bubble data={data} options={options} />
+        <Bubble data={data} options={{ scales: { x: { type: 'linear', position: 'bottom' } } }} />
       </div>
       <div className="table-section">
-        <div>
-          <h3>Cluster 1</h3>
-          {renderTable(1)}
-        </div>
-        <div>
-          <h3>Cluster 2</h3>
-          {renderTable(2)}
-        </div>
-        <div>
-          <h3>Cluster 3</h3>
-          {renderTable(3)}
-        </div>
-        <div>
-          <h3>Cluster 4</h3>
-          {renderTable(4)}
-        </div>
+        {clusterEntries.map(([clusterNumber, data]) => renderTable(data, clusterNumber))}
       </div>
       <button onClick={handleBack} className="back-button">
         Kembali
