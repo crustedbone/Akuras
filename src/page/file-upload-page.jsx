@@ -74,21 +74,22 @@ function FileUploaded({ file }) {
   return (
     <div className="container">
       <header className="text-center my-4">
-        <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
-        <h1 style={{ margin: 0 }}>
-          <UploadFileIcon
-            style={{ color: "#fd8500", fontSize: "8rem", margin: 0 }}
-          />
-        </h1>
+        <img src="akuras.png" alt="Akuras" className="logo  mb-0" />
+        <p className="text-center mb-4 logo-text">Analisa Kualitas Beras</p>
       </header>
       <div className="file-uploaded text-center">
-        <h2>
+        <h1 style={{ margin: 0 }}>
+          <UploadFileIcon
+            style={{ color: "#fd8500", fontSize: "4rem", margin: 0 }}
+          />
+        </h1>
+        <h3>
           {file.name}{" "}
           <DeleteOutlineIcon
             style={{ color: "red", cursor: "pointer" }}
             onClick={handleDelete}
           />
-        </h2>
+        </h3>
         <div className="mb-0">
           <label htmlFor="clusters" className="me-2"><b>Jumlah Cluster:</b></label>
           <input

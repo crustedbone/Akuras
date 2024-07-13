@@ -15,7 +15,8 @@ function Processing() {
   return (
     <div className="App">
       <header className="App-header">
-      <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
+      <img src="akuras.png" alt="Akuras" className="logo  mb-0" />
+      <p className="text-center mb-4 logo-text">Analisa Kualitas Beras</p>
         <h1>Processing...</h1>
         <div className="progress-circle">
           <svg>

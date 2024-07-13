@@ -80,7 +80,7 @@ function Result() {
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
-              <td>{row.no}</td>
+              <td>{(index+1)}</td>
               <td>{row.rice_brand}</td>
               <td>{row.sosoh_degree}</td>
               <td>{row.water_content}</td>
@@ -103,7 +103,8 @@ function Result() {
   return (
     <div className="result-container">
       <header>
-        <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
+        <img src="akuras.png" alt="Akuras" className="logo  mb-0" />
+        <p className="text-center mb-4 logo-text">Analisa Kualitas Beras</p>
         <h1>Result</h1>
         <p>Cluster of Rice Quality K= {clusterEntries.length}</p>
       </header>

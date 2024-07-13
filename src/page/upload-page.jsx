@@ -14,7 +14,8 @@ function Upload({ onFileSelect }) {
   return (
     <div className="container text-center">
       <header className="my-4">
-        <img src="akuras.png" alt="Akuras" className="logo  mb-5" />
+        <img src="akuras.png" alt="Akuras" className="logo  mb-0" />
+        <p className="text-center mb-4 logo-text">Analisa Kualitas Beras</p>
         <h1 className='mb-2'><b>Upload Data Set</b></h1>
         <h5 className='mb-3'>Please upload file with EXCEL/CSV format.</h5>
         <input 

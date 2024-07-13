@@ -32,12 +32,16 @@ body {
 }
 
 .logo {
-  width: 500px;
+  width: 367px;
   margin-bottom: 20px;
 }
 
+.logo-text{
+  color: #FC8E13;
+}
+
 .upload-button {
-  background-color: #ff7f00;
+  background: linear-gradient(to bottom, #ff7f00 0%, #d54700 100%);
   color: white;
   padding: 30px 30px;
   border: none;
